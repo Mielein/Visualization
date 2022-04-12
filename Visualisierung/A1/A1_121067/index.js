@@ -39,8 +39,8 @@ const mpg_acceleration =
 vl.markCircle()
 .data(data)
 .encode(
-    vl.x().fieldQ('mpg').scale({zero:false}),
-    vl.y().fieldQ('acceleration').scale({zero:false}),
+    vl.y().fieldQ('weight').scale({zero:false}),
+    vl.x().fieldQ('horsepower').scale({zero:false}),
     /* vl.color().fieldN('name') */
 ).render()
 .then(chart =>{
