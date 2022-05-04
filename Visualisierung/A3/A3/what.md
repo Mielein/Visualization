@@ -1,20 +1,6 @@
 # Your answer for Task 1: What
 
 
-<!-- DATA TYPES|
-----------|---------------------------------------------------------------------------------------------------
-Items     |Unique Squirrel ID, Specific Location, Color notes, Other Activities
-          |
-Attributes|Shift, Hectare, Date, Hectare, Squirrel, Age, Primary Fur Color, Highlight Fur Color, Location, 
-          |Above Ground Sighter Measurement, Running, Chasing, Climbing, Eating, Foraging, Kuks, Quaas, Moans, 
-          |Tail flags, Tail twitches, Approaches, Indifferent, Runs from
-          |
-Link      |Combination of Primary and Highlight Color, 
-          |
-Position  |X,Y,Lat/Long
-          |
-Grid      | -->
-
 The Dataset Type is a Table so the Data Types are Attributes
 
 Quantitative:
