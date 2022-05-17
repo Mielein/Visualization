@@ -12,9 +12,7 @@ const svg = parent.append("svg")
 .attr("viewBox", [0,0,width,height]);
 
 
-console.log(array);
-
- scatterPlot(svg, data, x, y, "species", width, height, margin);
+scatterPlot(svg, data, data.columns[0], data.columns[1], "species", width, height, margin);
 
 
 function scatterPlot(parent, data, x, y, colour, width, height, margin){
@@ -57,3 +55,4 @@ function scatterPlot(parent, data, x, y, colour, width, height, margin){
         console.log("x", scaleX.invert(selection[0][0]),scaleX.invert(selection[1][0]))
         console.log("y", scaleY.invert(selection[0][1]),scaleY.invert(selection[1][1]))
     }
+}

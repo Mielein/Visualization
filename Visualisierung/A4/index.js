@@ -6,45 +6,68 @@ console.log(data);
 const width = 800;
 const height = width;
 const margin = {top: 10, bottom: 50, right: 10, left: 50};
+const padding = 20;
 
 const parent = d3.select("#visualization");
 const svg = parent.append("svg")
 .attr("viewBox", [0,0,width,height]);
 
-const x = data.columns;
-const y = data.columns;
+const crossProduct = d3.cross(data.columns, data.columns).filter(x => !x.includes("species"));
+
+for(let i = 0; i < crossProduct.length; i++){
+    scatterPlot(svg, data, crossProduct[i][0], crossProduct[i][1], "species", width, height, margin, i);
+
+}
 
 
-scatterPlotMatrix(svg, data, x, y, "species", width, height, margin);
 
+function scatterPlot(parent, data, x, y, colour, width, height, margin, i){
 
-function scatterPlotMatrix(parent, data, x, y, colour, width, height, margin){
-    const X = d3.map(x, x => d3.map(data, typeof x == "function" ? x : d => d[x]));
-    const Y = d3.map(y, y => d3.map(data, typeof y == "function" ? x : d => d[y]));
+    
 
-    const cellWidth = (width - margin.left -margin.right)/x.length;
-    const cellHeight = (height - margin.top -margin.bottom)/y.length;
+    const matrixWidth = (width - margin.left - margin.right - 3 * padding) / 4;
+    const matrixHeight = (height - margin.top - margin.bottom - 3 * padding) / 4;
+
+    
 
     const scaleX = d3.scaleLinear()
     .domain(d3.extent(data, d => d[x])) //extend() finds out highest or lowest value of array 
-    .range([margin.left, width - margin.right])
+    .range([0, matrixWidth])
     .nice();
+
     const scaleY = d3.scaleLinear()
     .domain(d3.extent(data, d => d[y])) 
-    .range([height - margin.bottom, margin.top])
+    .range([matrixHeight, 0])
     .nice();
     const scaleColour = d3.scaleOrdinal(d3.schemePaired); //do not have to define input domain
 
-    const xAxis = d3.axisBottom().ticks(cellWidth/50);
-    const yAxis = d3.axisBottom().ticks(cellHeight/35);
+    if(i % 4 == 0){
+        if(i == 0){
+            parent.append("g") //groupelement
+            .attr("transform", `translate(${i * (matrixWidth + padding)} , ${matrixHeight + padding})`)
+            .call(d3.axisBottom(scaleX));
 
-    parent.append("g") //groupelement
-    .attr("transform", `translate(0, ${height - margin.bottom})`)
-    .call(d3.axisBottom(scaleX));
+            parent.append("g") 
+            .attr("transform", `translate(0, ${i * matrixHeight + padding})`)
+            .call(d3.axisLeft(scaleY));
+        }
+        parent.append("g") //groupelement
+        .attr("transform", `translate(${(i/4) * (matrixWidth + padding)} , ${i * matrixHeight + padding})`)
+        .call(d3.axisBottom(scaleX));
 
-    parent.append("g") 
-    .attr("transform", `translate(${margin.left}, 0)`)
-    .call(d3.axisLeft(scaleY));
+        parent.append("g") 
+        .attr("transform", `translate(${i/4 * (matrixHeight + padding)}, ${i * matrixHeight + padding})`)
+        .call(d3.axisLeft(scaleY));
+    }
+    else{
+        parent.append("g") //groupelement
+        .attr("transform", `translate(${i * (matrixWidth + padding)} , ${matrixHeight + padding})`)
+        .call(d3.axisBottom(scaleX));
+
+        parent.append("g") 
+        .attr("transform", `translate(${i * (matrixWidth + padding)}, ${matrixHeight + 15})`)
+        .call(d3.axisLeft(scaleY));
+    }
 
     parent.selectAll("circle")
     .data(data)
@@ -54,27 +77,6 @@ function scatterPlotMatrix(parent, data, x, y, colour, width, height, margin){
     .attr("r", 5) //radius
     .attr("fill", d => scaleColour(d[colour]));
 
-    const cell = parent.append("g")
-    .selectAll("g")
-    .data(d3.cross(x,y))
-    .join("g")
-        .attr("transform", ([i,j]) => `translate(${i * (cellWidth)}, ${j * (cellHeight)})`);
-
-    cell.append("rect")
-        .attr("fill","none")
-        .attr("stroke", "currentColor")
-        
-
-
-    cell.each(function([x,y]){
-        d3.select(this).selectAll("circle")
-        .join("circle")
-            .attr("r", 3.5)
-            .attr("cx", i => xScales[x](X[x][i]))
-            .attr("cy", i => yScales[y](Y[y][i]))
-
-    });
-
     const brush = d3.brush()
     .extent([[margin.left, margin.top], [width - margin.right, height - margin.bottom]]) //upper left corner and bottom right corner
     .on("start brush end", brushed);
@@ -83,10 +85,9 @@ function scatterPlotMatrix(parent, data, x, y, colour, width, height, margin){
 
     function brushed({selection}, data){
         console.log(selection, data);
-        console.log("x", scaleX.invert(selection[0][0]),scaleX.invert(selection[1][0]))
-        console.log("y", scaleY.invert(selection[0][1]),scaleY.invert(selection[1][1]))
+        if(selection && selection[0] && selection[1]){
+            console.log("x", scaleX.invert(selection[0][0]),scaleX.invert(selection[1][0]))
+            console.log("y", scaleY.invert(selection[0][1]),scaleY.invert(selection[1][1]))
+        }
     }
-  
-
-
 }
