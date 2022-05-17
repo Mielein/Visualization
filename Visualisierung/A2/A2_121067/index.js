@@ -60,7 +60,7 @@ vl.markBar({size: 15})
     const snow = vl.markLine({stroke: 'firebrick'})
     .data(data)
     .encode(
-        vl.y().average('SNOW_DEPTH').type('quantitative').title('average snow depth (cm)',{color:'red'} ).axis({orient:'right'}),
+        vl.y().average('SNOW_DEPTH').type('quantitative').title('average snow depth (cm)').axis({orient:'right',labelColor:'red', titleColor:'red'}),
         vl.x().month("DATE").type('ordinal').title('Month'),
         
     );
