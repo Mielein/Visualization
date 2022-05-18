@@ -23,12 +23,9 @@ for(let i = 0; i < crossProduct.length; i++){
 
 function scatterPlot(parent, data, x, y, colour, width, height, margin, i){
 
-    
-
     const matrixWidth = (width - margin.left - margin.right - 3 * padding) / 4;
     const matrixHeight = (height - margin.top - margin.bottom - 3 * padding) / 4;
 
-    
 
     const scaleX = d3.scaleLinear()
     .domain(d3.extent(data, d => d[x])) //extend() finds out highest or lowest value of array 
@@ -44,20 +41,26 @@ function scatterPlot(parent, data, x, y, colour, width, height, margin, i){
     if(i % 4 == 0){
         if(i == 0){
             parent.append("g") //groupelement
-            .attr("transform", `translate(${i * (matrixWidth + padding)} , ${matrixHeight + padding})`)
+            .attr("transform", `translate(0 , ${(matrixHeight + padding)})`)
             .call(d3.axisBottom(scaleX));
-
-            parent.append("g") 
-            .attr("transform", `translate(0, ${i * matrixHeight + padding})`)
-            .call(d3.axisLeft(scaleY));
+            
         }
+
         parent.append("g") //groupelement
+        .attr("transform", `translate(0 , ${i * (matrixHeight + padding)})`)
+        .call(d3.axisBottom(scaleX));
+
+        parent.append("g") 
+        .attr("transform", `translate(${( padding)}, ${matrixHeight + padding})`)
+        .call(d3.axisLeft(scaleY));
+
+/*         parent.append("g") //groupelement
         .attr("transform", `translate(${(i/4) * (matrixWidth + padding)} , ${i * matrixHeight + padding})`)
         .call(d3.axisBottom(scaleX));
 
         parent.append("g") 
         .attr("transform", `translate(${i/4 * (matrixHeight + padding)}, ${i * matrixHeight + padding})`)
-        .call(d3.axisLeft(scaleY));
+        .call(d3.axisLeft(scaleY)); */
     }
     else{
         parent.append("g") //groupelement
