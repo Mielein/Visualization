@@ -1,5 +1,5 @@
 import * as d3 from "d3"
-import { selection } from "d3";
+import { color, selection } from "d3";
 
 const data = await d3.csv("data/iris.csv", d3.autoType);
 data.forEach((d, i) => d.index = i);
@@ -18,6 +18,7 @@ const y = data.columns.filter(x => !x.includes("species"));;
 
 
 scatterPlot(svg, data, x, y, {species: d => d.species}, width, height, margin);
+//parallelCoordinate(parent, data, x, y, width, height, margin);
 
 
 function scatterPlot(parent, data, x, y, {species = () => 1}, width, height, margin){
@@ -77,7 +78,7 @@ function scatterPlot(parent, data, x, y, {species = () => 1}, width, height, mar
     .attr("r", 2) //radius
     .attr("fill", i => scaleS(S[i]));
 
-    if (x === y) svg.append("g")
+    parent.append("g")
     .attr("font-size", 10)
     .selectAll("text")
     .data(x)
@@ -85,6 +86,7 @@ function scatterPlot(parent, data, x, y, {species = () => 1}, width, height, mar
     .attr("transform", (d, i) => `translate(${i * (matrixWidth + padding)},${i * (matrixHeight + padding)})`)
     .attr("x", padding / 2)
     .attr("y", padding / 2)
+    .attr("fill", "black")
     .attr("dy", ".3em") 
     .text(d => d);
 
@@ -120,9 +122,51 @@ function scatterPlot(parent, data, x, y, {species = () => 1}, width, height, mar
         circle.classed("hidden", false);
     }   
 }
+//parse error :(
+/* function parallelCoordinate(parent, data, x, y, width, height, margin) {
+
+    const S = d3.map(data, d => d.species);
+    const color = d3.scaleOrdinal(S, d3.schemeAccent);
+
+    var Y = {}
+    for(var i in x) {
+        var title = x[i];
+        Y[title] = d3.scaleLinear()
+        .domain([0, y])
+        .range([2 * height - margin.top - padding, height + margin.bottom]);
+    }
+
+    var X = d3.scalePoint()
+        .domain(x)
+        .range([margin.right + padding, width - margin.left - padding]);
+
+    parent.selectAll("myPath")
+    .data(data)
+    .enter()
+    .append("path")
+        .attr("class", d => "line" + d.species)
+        .attr("d", d => d3.line()(x.map(p => [X(p), Y[p](d[p])])))
+        .style("fill", "none")
+        .style("stroke", d => color(d.species))
+        .style("opacity", 0.8)
+
+    parent.selectAll("myAxis")
+    .data(x).enter()
+    .append("g")
+    .attr("class", "axis")
+    .attr("transform", d => translate(${X(d)})
+    .each(function(d) { d3.select(this).call(d3.axisLeft().ticks(5).scale(Y[d])); })
+    .append("text")
+        .attr("y", height + margin.top + padding)
+        .style("text-anchor", "middle")
+        .style("fill", "black")
+        .text(d => d)
+} */
 
 //used 
 //https://observablehq.com/@d3/brushable-scatterplot-matrix
 //https://observablehq.com/@d3/splom
-//also got help from Lisa Piekarski
+//https://d3-graph-gallery.com/graph/parallel_custom.html
+//also got help from Lisa Piekarski and Jeremias Kilian
+
 
