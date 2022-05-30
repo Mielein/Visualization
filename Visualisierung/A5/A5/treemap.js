@@ -26,6 +26,9 @@ export function treemap({
     .text((d) => d);
 
   // TODO: link the chart to the select element
+  selectTile.on("click", function(e, d){
+    console.log("click");
+  })
   
   function update() {
     // remove all previous elements
@@ -36,7 +39,7 @@ export function treemap({
 
     // TODO: prepare the treemap using d3.treemap and d3.hierarchy with the
     // selected tiling algorithm. 
-    const root = null;
+    const root = null /* d3.treemap() */;
     
     draw();
 
@@ -44,9 +47,6 @@ export function treemap({
     // the given icicles implementation for both the rectangles and the labels.
     // Please, do not forget the tooltips. 
     function draw() {
-      // simple check if we have a root variable; return without drawing if not
-      if (typeof(root) === "undefined") return;
-
       // TODO: create a group for each leaf node
       // TODO: draw a rectangle
       // TODO: draw the label
