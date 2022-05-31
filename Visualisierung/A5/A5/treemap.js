@@ -40,7 +40,7 @@ export function treemap({
 
     // TODO: prepare the treemap using d3.treemap and d3.hierarchy with the
     // selected tiling algorithm. 
-    const root = d3.hierarchy(data, children)
+    
 
     d3.treemap() 
       .size([width, height])

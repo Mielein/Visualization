@@ -59,18 +59,33 @@ export function lineChart({
   // color scale by movie title
   const color = d3.scaleOrdinal(d3.schemeCategory10).domain(movies.keys());
 
-  // TODO: draw a line for each time series as well as labels
+//draw a line for each time series as well as labels
   const line = d3.line()
     .x((d) => x(d.day))
     .y((d) => y(d.totalGross))
-    console.log((d) => d)
-    
+     
+  
   svg.selectAll(".line")
+  .data(movies)
+  .enter()
+  .append("path")
+  .attr("fill", "none")
+  .attr("stroke", (d) => color(d.key)) 
+  .attr("stroke-width", 1.5)
+  .attr("d", (d) => line(d.values))
+
+  svg.selectAll("myLabels")
     .data(movies)
     .enter()
-    .append("path")
-    .attr("fill", "none")
-    .attr("stroke", (d) => color(d.key)) 
-    .attr("stroke-width", 1.5)
-    .attr("d", line)
+      .append('g')
+      .append("text")
+      .datum(function(d) { return {key: d.key, value: d.values[d.values.length - 1]}; })
+      .attr("transform", (d) => "translate(" + x(d.value.day) + "," + y(d.value.totalGross) + ")")
+      .attr("x", 5)
+          .text((d) => d.key)
+          .style("fill", (d) => color(d.key))
+          .style("font-size", 15)
+
+  
+
 }
