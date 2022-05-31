@@ -60,16 +60,17 @@ export function lineChart({
   const color = d3.scaleOrdinal(d3.schemeCategory10).domain(movies.keys());
 
   // TODO: draw a line for each time series as well as labels
-    const line = d3.line()
-      .x((d) => x(d.day)/* movies[d].values[d].day */)
-      .y((d) => y(d.totalGross)/* movies[d].values[d].totalGross */);
-
+  const line = d3.line()
+    .x((d) => x(d.day))
+    .y((d) => y(d.totalGross))
+    console.log((d) => d)
     
   svg.selectAll(".line")
     .data(movies)
+    .enter()
     .append("path")
     .attr("fill", "none")
-    .attr("stroke", color) 
+    .attr("stroke", (d) => color(d.key)) 
     .attr("stroke-width", 1.5)
     .attr("d", line)
 }

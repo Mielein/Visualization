@@ -37,9 +37,14 @@ export function treemap({
     // get the selected tiling algorithm string
     const tiling = selectTile.property("value");
 
+
     // TODO: prepare the treemap using d3.treemap and d3.hierarchy with the
     // selected tiling algorithm. 
-    const root = null /* d3.treemap() */;
+    const root = d3.hierarchy(data, children)
+
+    d3.treemap() 
+      .size([width, height])
+
     
     draw();
 
