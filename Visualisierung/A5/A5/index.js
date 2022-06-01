@@ -19,7 +19,7 @@ d3.csv("/data/boxoffice.csv", d3.autoType).then((data) => {
 
 loadMoviesDataset().then((movies) => {
   const franchises = movieFranchises(movies);
-  console.log(franchises);
+  //console.log(franchises);
   const color = d3
     .scaleOrdinal(d3.schemeTableau10)
     .domain(new Set(franchises.children, (d) => d.data.name));

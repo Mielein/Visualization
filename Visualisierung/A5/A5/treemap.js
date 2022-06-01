@@ -43,7 +43,6 @@ export function treemap({
     const hierarchy = d3
     .hierarchy(data)
     .sum((d) => d.revenue)
-    .sort((a, b) => b.height - a.height || b.value - a.value);
     const root = d3.partition().size([height, width]).padding(1)(hierarchy);
     const maxDepth = d3.max(root.descendants(), (d) => d.depth);
     const x = d3
@@ -53,12 +52,15 @@ export function treemap({
 
     d3.treemap() 
       .size([width, height])
-      .padding(1)
+      .padding(2)
       (root)
 
+    console.log(root)
     console.log(root.leaves())
     draw();
+    
 
+    
     // TODO: finish the draw function. You can take inspiration (and code) from 
     // the given icicles implementation for both the rectangles and the labels.
     // Please, do not forget the tooltips. 
@@ -82,22 +84,60 @@ export function treemap({
             return color(d.data.name);
           });
       // TODO: draw the label
-      svg
-        .selectAll("text")
+        const text = svg
+        .selectAll("title")
         .data(root.leaves())
         .enter()
+        .filter((d) => d.x1 - d.x0 > minFontSize)
         .append("text")
-          .attr("x", (d) => d.x0)
-          .attr("y", (d) => d.y0) 
-          .text((d) => d.data.name)
-          .attr("font-size", "15px")
-          .attr("fill", "white")
-    }
-  }
+        .style("user-select", "none")
+        .attr("pointer-events", "none")
+        .attr("font-size", fontSize)
+        .attr("x", 2)
+        .attr("y", "0.9em");
+        
+        text
+          .append("tspan")
+          .attr("x", function(d){ return d.x0+5})   
+          .attr("y", function(d){ return d.y0+15})
+          .text((d) =>
+            shortenText(
+              d.children ? d.data.name : d.data.title,
+              Math.floor( (d.x1 - d.x0) / fontSize(d)* 1.4))
+            );
 
+        text
+          .append("tspan")
+          .attr("x", function(d){ return d.x0})   
+          .attr("y", function(d){ return d.y0+25})
+          .attr("fill-opacity", 0.7)
+          .text((d) => ` ${bigMoneyFormat(d.value)}`);
+          
+          /* svg
+          .selectAll("title")
+          .data(root.leaves())
+          .enter()
+          .append("text")
+            .attr("x", function(d){ return d.x0+5})   
+            .attr("y", function(d){ return d.y0+20})
+          .text((d) =>
+            shortenText(
+              d.children ? d.data.name : d.data.title,
+              Math.floor((x.bandwidth() / fontSize(d)) * 1.4)
+            )
+          )
+            .attr("font-size", fontSize)
+            .attr("fill", "white") 
+            .append("tspan")
+            .attr("fill-opacity", 0.7)
+            .text((d) => ` ${bigMoneyFormat(d.value)}`);*/
+
+    } 
+  }
+  const minFontSize = 3;
   // naive function to heuristically determine font size based on the rectangle size
   function fontSize(d) {
-    return Math.min(12, Math.max(8, d.x1 - d.x0 - 4));
+    return Math.min(10, Math.max(8, d.x1 - d.x0 - 4));
   }
 
   // draw initially
