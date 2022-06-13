@@ -82,7 +82,8 @@ export function lineChart({
       .datum(function(d) { return {key: d.key, value: d.values[d.values.length - 1]}; })
       .attr("transform", (d) => "translate(" + x(d.value.day) + "," + y(d.value.totalGross) + ")")
       .attr("x", 5)
-          .text((d) => d.key)
+      .text((d) =>
+      shortenText( d.key, 18))
           .style("fill", (d) => color(d.key))
           .style("font-size", 15)
 
