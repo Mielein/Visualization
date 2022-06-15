@@ -17,9 +17,23 @@ export function documentToWords(text) {
 // RETURN: Map of words matching their idf score
 export function inverseDocumentFrequency(wordsPerDocument) {
   const idf = new Map(); 
+
+  var counter = 0;
+  for (let i = 0; i < wordsPerDocument.length; i++){
+    counter = 0;
+    for(let j = 0; j < wordsPerDocument[i].length; j++){
+      
+      if(wordsPerDocument[i].includes(wordsPerDocument[i][j])){
+        counter++;
+      }
+      idf.set(wordsPerDocument[i][j],1/(Math.log(wordsPerDocument.length/Math.abs(counter))));
+    } 
+  }
+  console.log(idf)
   // count documents per word
   // normalize to get frequency [0, 1]
-  return idf;
+  return idf; 
+
 }
 
 //TODO: Task 2: transform document to word vector using the tf-idf score
@@ -28,6 +42,17 @@ export function inverseDocumentFrequency(wordsPerDocument) {
 // RETURN: array of form [[word, score], [word, score], ...]
 //        -> sorted in descending order of score (best score first)
 export function tfidf(words, idf) {
+  var counter = 0;
+  const tf = new Map()
+
+  for (let i = 0; i < words.length; i++){ 
+    counter = 0;
+      if(words.includes(words[i])){
+        counter++;
+      }
+      tf.set(words[i], counter/words.length);
+  }
+
   //Tip: d3.rollups might help your here
   return words.map(word => [word, 0]);
 }

@@ -32,17 +32,12 @@ export function wordcloud({ svg, wordsPerGroup, selection }) {
   const layout = cloud()
     .size([height, width])
     .rotate(0)
-    .padding(3)
-    .fontSize(60)
-    .on("word", ({size, x, y, rotate, text}) => {
-      g.append("text")
-          .attr("font-size", size)
-          .attr("transform", `translate(${x},${y}) rotate(${rotate})`)
-          .text(text);});
-
+    .padding(d => d.padding)
+    .fontSize(d => Math.sqrt(d[1]) * 20)
+    .font(d => d.font);
+ 
   update();
   selection.on("change", update);
-  layout.start();
   function update() {
     // get the option of the select box
     const group = selection.property("value");
@@ -52,7 +47,12 @@ export function wordcloud({ svg, wordsPerGroup, selection }) {
     //adjust the domain of the word size scale
     size.domain(d3.extent(words, (d) => d[1]));
     // TODO: Task 1: adjust the layout accordingly
-    layout.words(words);
-    console.log(words); 
+    layout
+    .words(words)
+    .on("word", () => {
+      g.append("text")
+        .attr("transform", `translate(${words.x},${words.y}) rotate(${words.rotate})`)
+          .text(words.map(d => d[0]));})
+    .start();
   }
 }
